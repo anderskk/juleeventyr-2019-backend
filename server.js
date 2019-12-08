@@ -67,13 +67,17 @@ app.post('/api/checkanswer', asyncErrorHandler(async (req, res) => {
 
   const taskSubLevel = subLevel(task);
   console.log('task sub level', taskSubLevel)
+  if (currentUser.subLevel >= taskSubLevel && task === 'toRoeverspraak') {
+    users[user] = { subLevel: currentUser.subLevel + 1 };
+    return res.status(200).send({ taskSuccess, message: 'Lurer på hva /askepott holder på med...' });
+  }
   if (currentUser.subLevel === taskSubLevel) {
     users[user] = { subLevel: currentUser.subLevel + 1 };
     //update tracking api user subLevel
   } else if (currentUser.subLevel < subLevel(task)) {
     return res
       .status(200)
-      .send({ taskSuccess, message: 'Are you sure you have answered all the previous questions at least once?' });
+      .send({ taskSuccess, message: 'Er du sikker på at du har svart på alle tidligere oppgaver?' });
   }
 
   return res
@@ -88,4 +92,27 @@ app.listen(port, function () {
 
 app.get('/api/secret/users', (req, res) => {
   return res.status(200).json(users).send();
+});
+
+app.get('/api/askepott', (req, res) => {
+  const { user } = req.query;
+
+  const givenUser = users[user];
+  if (givenUser && givenUser.subLevel >= 5) {
+    return res.status(200).send();
+  }
+
+  return res.status(404).send('Jasså, du fant denne før du var ferdig med leksene? Bra jobba, men sorry - lekser først.')
+});
+
+const cookie = '-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQCxOojGPIZsXSSDR+ZYQ/Iyi4rXbYt7A9IwfRkeDtI4GyF+nVn3\nEbcHifvtmtNbsIKrUNap080HxhHycqjTQe6DvIPgDJzkcR7mxhWalLfXb3cmUhd1\nsdeg/';
+
+app.get('/api/jaktutstyr', (req, res) => {
+  const { user } = req.query;
+
+  const givenUser = users[user];
+  if (givenUser && givenUser.subLevel >= 5) {
+    return res.cookie('jaktutstyr-key', cookie).status(200).send();
+  }
+  return res.status(404).send('Jasså, du fant denne før du var ferdig med leksene? Bra jobba, men sorry - lekser først.')
 });
