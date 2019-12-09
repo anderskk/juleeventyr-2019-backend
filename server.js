@@ -33,6 +33,11 @@ app.put('/api/checkanswer', async (req, res) => {
 app.post('/api/checkanswer', asyncErrorHandler(async (req, res) => {
   console.log('body', req.body);
   const { task, code, user } = req.body;
+
+  if (!user) {
+    return res.status(400).send('Mangler user');
+  }
+
   let currentUser = users[user];
 
   if (!currentUser) {
@@ -110,9 +115,13 @@ const cookie = '-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQCxOojGPIZsXSSDR+Z
 app.get('/api/jaktutstyr', (req, res) => {
   const { user } = req.query;
 
+  if (!user) {
+    return res.status(400).send('Mangler user');
+  }
+
   const givenUser = users[user];
   if (givenUser && givenUser.subLevel >= 5) {
-    return res.cookie('jaktutstyr-key', cookie).status(200).send();
+    return res.cookie('jaktutstyr-key', cookie).status(200).send({ nextUrl: `https://jul19-uu-cookies.herokuapp.com/?username=${user}` });
   }
   return res.status(404).send('Jasså, du fant denne før du var ferdig med leksene? Bra jobba, men sorry - lekser først.')
 });
