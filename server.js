@@ -72,7 +72,7 @@ app.post('/api/checkanswer', asyncErrorHandler(async (req, res) => {
 
   const taskSubLevel = subLevel(task);
   console.log('task sub level', taskSubLevel)
-  if (currentUser.subLevel >= taskSubLevel && task === 'toRoeverspraak') {
+  if (currentUser.subLevel >= taskSubLevel && task === 'swapPairs') {
     users[user] = { subLevel: currentUser.subLevel + 1 };
     return res.status(200).send({ taskSuccess, message: 'Lurer på hva /askepott holder på med...' });
   }
@@ -103,7 +103,7 @@ app.get('/api/askepott', (req, res) => {
   const { user } = req.query;
 
   const givenUser = users[user];
-  if (givenUser && givenUser.subLevel >= 5) {
+  if (givenUser && givenUser.subLevel >= 6) {
     return res.status(200).send();
   }
 
@@ -120,7 +120,7 @@ app.get('/api/jaktutstyr', (req, res) => {
   }
 
   const givenUser = users[user];
-  if (givenUser && givenUser.subLevel >= 5) {
+  if (givenUser && givenUser.subLevel >= 6) {
     return res.cookie('jaktutstyr-key', cookie).status(200).send({ nextUrl: `https://jul19-uu-cookies.herokuapp.com/?username=${user}` });
   }
   return res.status(404).send('Jasså, du fant denne før du var ferdig med leksene? Bra jobba, men sorry - lekser først.')

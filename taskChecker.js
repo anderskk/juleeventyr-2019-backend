@@ -3,7 +3,8 @@ const taskCheckers = {
     getBiggestNumber: { taskFn: checkBiggestNumber, subLevel: 1 },
     getNumbers: { taskFn: checkGetNumbers, subLevel: 2 },
     removeDuplicates: { taskFn: checkRemoveDuplicates, subLevel: 3 },
-    toRoeverspraak: { taskFn: checkToRoeverspraak, subLevel: 4 }
+    toRoeverspraak: { taskFn: checkToRoeverspraak, subLevel: 4 },
+    swapPairs: { taskFn: checkSwapPairs, subLevel: 5 }
 };
 
 function checkAnswer(task, code) {
@@ -102,6 +103,10 @@ function checkRemoveDuplicates(code) {
 
 function checkToRoeverspraak(code) {
     return check(code, 'bsgig swbgs gwb ui db', 'bobsosgogig swowbgs gwb ui dodb');
+}
+
+function checkSwapPairs(code) {
+    return check(code, 'hei hei hhh', "eh ieh ihhh");
 }
 
 function check(code, testInput, expectedAnswer) {
